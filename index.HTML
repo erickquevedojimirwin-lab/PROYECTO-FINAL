@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lector de Códigos STEAM</title>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<style>
+:root{--azul:#2563eb;--verde:#10b981;--fondo:#f4f7fb;--texto:#172033;--blanco:#fff;--borde:#dbe3ef}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:var(--texto)}
+header{background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;padding:28px 18px;text-align:center}
+header h1{margin:0 0 8px;font-size:30px}
+header p{margin:0;opacity:.95}
+.container{max-width:1000px;margin:22px auto;padding:0 16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.card{background:white;border:1px solid var(--borde);border-radius:18px;padding:20px;box-shadow:0 8px 24px rgba(20,40,80,.07)}
+h2{margin-top:0}
+#reader{width:100%;max-width:520px;margin:auto}
+button{border:0;border-radius:10px;padding:12px 16px;background:var(--azul);color:white;font-weight:bold;cursor:pointer;margin:4px}
+button.secondary{background:#475569}
+input{width:100%;padding:13px;border:1px solid var(--borde);border-radius:10px;margin:7px 0 10px;font-size:16px}
+.result{margin-top:16px;padding:18px;border-radius:14px;background:#eff6ff;border-left:5px solid var(--azul);display:none}
+.ok{background:#ecfdf5;border-left-color:var(--verde)}
+.error{background:#fff1f2;border-left-color:#e11d48}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#e0e7ff;color:#3730a3;font-size:13px;font-weight:bold}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+td,th{padding:9px;border-bottom:1px solid var(--borde);text-align:left}
+.small{font-size:13px;color:#64748b}
+.steps li{margin-bottom:8px}
+footer{text-align:center;padding:25px;color:#64748b}
+@media(max-width:750px){.grid{grid-template-columns:1fr}header h1{font-size:25px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>📦 Lector de Códigos de Barras STEAM</h1>
+  <p>Matemática + Tecnología + Ingeniería + Arte + Ciencia</p>
+</header>
+
+<div class="container">
+  <div class="grid">
+    <section class="card">
+      <h2>📷 1. Escanear</h2>
+      <p>Permite el acceso a la cámara y apunta al código de barras.</p>
+      <div id="reader"></div>
+      <p class="small">Formatos especialmente útiles para este proyecto: EAN-13, EAN-8, UPC-A y CODE-128.</p>
+    </section>
+
+    <section class="card">
+      <h2>🔎 2. Buscar por número</h2>
+      <p>Si la cámara no funciona, escribe el número que aparece debajo del código.</p>
+      <input id="manualCode" placeholder="Ejemplo: 7501234567893" inputmode="numeric">
+      <button onclick="buscarManual()">Buscar</button>
+      <button class="secondary" onclick="limpiar()">Limpiar</button>
+      <div id="resultado" class="result"></div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:18px">
+    <h2>🧮 3. Comprobación matemática EAN-13</h2>
+    <p>Para un EAN-13, la aplicación puede verificar el dígito de control del código.</p>
+    <div id="calculo" class="result" style="display:block">
+      Escanea o escribe un código EAN-13 para mostrar el procedimiento.
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:18px">
+    <h2>🧑‍🔬 4. Reto STEAM</h2>
+    <ol class="steps">
+      <li>Diseña un producto ficticio.</li>
+      <li>Asigna los 12 primeros dígitos.</li>
+      <li>Calcula el dígito de control.</li>
+      <li>Genera e imprime el código de barras.</li>
+      <li>Escanéalo con esta aplicación.</li>
+      <li>Modifica una condición: tamaño, distancia o impresión.</li>
+      <li>Vuelve a probar y registra el resultado.</li>
+    </ol>
+  </section>
+</div>
+
+<footer>
+  Proyecto educativo STEAM — Los códigos mostrados son identificadores ficticios para uso escolar.
+</footer>
+
+<script>
+// Base de datos educativa local.
+// Puedes cambiar, agregar o eliminar productos.
+const productos = {
+  "7501234567893": {
+    nombre: "Math Chocolate",
+    categoria: "Producto educativo ficticio",
+    precio: "$2,50",
+    grupo: "Grupo 1",
+    descripcion: "Producto creado para el proyecto STEAM."
+  },
+  "7501234567800": {
+    nombre: "EcoSnack",
+    categoria: "Producto ecológico ficticio",
+    precio: "$1,75",
+    grupo: "Grupo 2",
+    descripcion: "Producto creado para el proyecto STEAM."
+  },
+  "7501234567817": {
+    nombre: "BioFresh",
+    categoria: "Bebida ficticia",
+    precio: "$2,00",
+    grupo: "Grupo 3",
+    descripcion: "Producto creado para el proyecto STEAM."
+  }
+};
+
+function calcularEAN13(codigo){
+  if(!/^\d{13}$/.test(codigo)){
+    return {valido:false, mensaje:"El EAN-13 debe tener exactamente 13 dígitos."};
+  }
+  const digitos = codigo.split("").map(Number);
+  let sumaImpares = 0, sumaPares = 0;
+  for(let i=0;i<12;i++){
+    if((i+1)%2===1) sumaImpares += digitos[i];
+    else sumaPares += digitos[i];
+  }
+  const sumaPonderada = sumaImpares + (sumaPares*3);
+  const digitoControl = (10 - (sumaPonderada % 10)) % 10;
+  const valido = digitoControl === digitos[12];
+  return {valido, sumaImpares, sumaPares, sumaPonderada, digitoControl, encontrado:digitos[12]};
+}
+
+function mostrarResultado(codigo){
+  const resultado = document.getElementById("resultado");
+  const calculo = document.getElementById("calculo");
+  const producto = productos[codigo];
+
+  if(producto){
+    resultado.className = "result ok";
+    resultado.innerHTML = `
+      <span class="badge">PRODUCTO ENCONTRADO</span>
+      <h3>${producto.nombre}</h3>
+      <table>
+        <tr><th>Código</th><td>${codigo}</td></tr>
+        <tr><th>Categoría</th><td>${producto.categoria}</td></tr>
+        <tr><th>Precio</th><td>${producto.precio}</td></tr>
+        <tr><th>Grupo</th><td>${producto.grupo}</td></tr>
+        <tr><th>Descripción</th><td>${producto.descripcion}</td></tr>
+      </table>`;
+  } else {
+    resultado.className = "result error";
+    resultado.innerHTML = `
+      <span class="badge">CÓDIGO NO REGISTRADO</span>
+      <p><strong>${codigo}</strong></p>
+      <p>El lector sí obtuvo un número, pero ese número no está en la base de datos educativa de esta página.</p>`;
+  }
+  resultado.style.display = "block";
+
+  if(/^\d{13}$/.test(codigo)){
+    const r = calcularEAN13(codigo);
+    if(r.valido){
+      calculo.className = "result ok";
+      calculo.innerHTML = `
+        <strong>✅ EAN-13 válido según el cálculo del dígito de control.</strong>
+        <p>Posiciones impares: ${r.sumaImpares}</p>
+        <p>Posiciones pares × 3: ${r.sumaPares} × 3 = ${r.sumaPares*3}</p>
+        <p>Suma total: ${r.sumaPonderada}</p>
+        <p>Dígito de control calculado: <strong>${r.digitoControl}</strong></p>
+        <p>Dígito encontrado: <strong>${r.encontrado}</strong></p>`;
+    } else {
+      calculo.className = "result error";
+      calculo.innerHTML = `
+        <strong>❌ El dígito de control no coincide.</strong>
+        <p>Posiciones impares: ${r.sumaImpares}</p>
+        <p>Posiciones pares × 3: ${r.sumaPares} × 3 = ${r.sumaPares*3}</p>
+        <p>Suma total: ${r.sumaPonderada}</p>
+        <p>Dígito de control que debería aparecer: <strong>${r.digitoControl}</strong></p>
+        <p>Dígito encontrado: <strong>${r.encontrado}</strong></p>`;
+    }
+  } else {
+    calculo.className = "result";
+    calculo.innerHTML = "Este código no tiene 13 dígitos, por lo que la comprobación automática EAN-13 no se aplica.";
+  }
+}
+
+function buscarManual(){
+  const codigo = document.getElementById("manualCode").value.trim();
+  if(!codigo){ alert("Escribe un código."); return; }
+  mostrarResultado(codigo);
+}
+
+function limpiar(){
+  document.getElementById("manualCode").value="";
+  document.getElementById("resultado").style.display="none";
+  document.getElementById("calculo").className="result";
+  document.getElementById("calculo").innerHTML="Escanea o escribe un código EAN-13 para mostrar el procedimiento.";
+}
+
+function onScanSuccess(decodedText){
+  const codigo = String(decodedText).trim();
+  document.getElementById("manualCode").value = codigo;
+  mostrarResultado(codigo);
+}
+
+// Scanner de cámara. html5-qrcode soporta EAN-13, EAN-8, UPC-A y CODE-128.
+const scanner = new Html5QrcodeScanner(
+  "reader",
+  {
+    fps: 10,
+    qrbox: {width: 280, height: 160},
+    formatsToSupport: [
+      Html5QrcodeSupportedFormats.EAN_13,
+      Html5QrcodeSupportedFormats.EAN_8,
+      Html5QrcodeSupportedFormats.UPC_A,
+      Html5QrcodeSupportedFormats.CODE_128,
+      Html5QrcodeSupportedFormats.CODE_39
+    ]
+  },
+  false
+);
+scanner.render(onScanSuccess, () => {});
+</script>
+</body>
+</html>
