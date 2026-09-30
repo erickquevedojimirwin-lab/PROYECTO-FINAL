@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lector de Códigos STEAM</title>
+<title>Lector de Códigos 10A</title>
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <style>
 :root{--azul:#2563eb;--verde:#10b981;--fondo:#f4f7fb;--texto:#172033;--blanco:#fff;--borde:#dbe3ef}
@@ -34,7 +34,7 @@ footer{text-align:center;padding:25px;color:#64748b}
 </head>
 <body>
 <header>
-  <h1>📦 Lector de Códigos de Barras STEAM</h1>
+  <h1>📦 Lector de Códigos de Barras 10A</h1>
   <p>Matemática + Tecnología + Ingeniería + Arte + Ciencia</p>
 </header>
 
@@ -87,27 +87,89 @@ footer{text-align:center;padding:25px;color:#64748b}
 // Base de datos educativa local.
 // Puedes cambiar, agregar o eliminar productos.
 const productos = {
-  "7501234567893": {
-    nombre: "Math Chocolate",
-    categoria: "Producto educativo ficticio",
-    precio: "$2,50",
-    grupo: "Grupo 1",
-    descripcion: "Producto creado para el proyecto STEAM."
-  },
-  "7501234567800": {
-    nombre: "EcoSnack",
-    categoria: "Producto ecológico ficticio",
-    precio: "$1,75",
-    grupo: "Grupo 2",
-    descripcion: "Producto creado para el proyecto STEAM."
-  },
-  "7860846213377": {
-    nombre: "BioFresh",
-    categoria: "Bebida ficticia",
-    precio: "$2,00",
-    grupo: "Grupo 3",
-    descripcion: "Producto creado para el proyecto STEAM."
-  }
+ "7503456789123": {
+    Nombre del producto: "Rímel GlowLash", 
+    Tipo: "Cosmético ecológico", 
+    Precio: "$2,50", 
+    Representante: "Dana Acosta 10moA",
+    Descripcion del proyecto: "Rímel alargador y voluminizador a base de ingredientes naturales creado para el proyecto STEAM." 
+    }, 
+"7862931700014": {
+    Nombre del producto: "CELLPHONEPRO",
+    Tipo: "Producto de tecnologia movil",
+    Precio: "$215",
+    Representante: "Belen Alucho 10A",
+    Descripcion del: "Gama Alta y Premium: Dispositivos insignia (flagships) que incorporan la tecnología más avanzada del momento. Tienen los procesadores más rápidos, pantallas profesionales, materiales como titanio o vidrio cerámico, y sistemas de cámaras con zoom óptico avanzado (como el Apple iPhone o la serie Galaxy S Ultra)."  
+    }
+"786293174137": {
+    Nombre del producto: "MAYU (kits de relajacion)", 
+    Tipo: "kit de skincare básico /cuidado personal",
+    Precio: "$8.00-$10.00",
+    Representante: "KEYLA CAISAGUANO 10moA",
+    Descripcion del: "Kit de cuidado personal con mascarilla, parches de ojeras, labial y scrunchie, creado para dar un momento de relajación y calma." 
+    }
+"786293176658":{
+    Nombre del producto: "COCOLÍA", 
+    Tipo: "Yogurt de coco",
+    Precio: "$1,80",
+    Representante: "Sandy Casa 10moA",
+    Descripcion del: "Yogurt de coco cremoso y 100% natural." 
+    }
+"786293170597":{
+    Nombre del producto: " ReNaceGrafitis ", 
+    Tipo: "se pueden hacer con diferentes materiales",
+    Precio: "$3,50",
+    Representante: " Salomé Cifuentes 10A ",
+    Descripcion del: "Producto creado para el proyecto STEAM" 
+    }
+"786293170018":{
+    Nombre del producto: "JOAKOBURGUER", 
+    Tipo: "Producto alimenticio ficticio",
+    Precio: "$2,00",
+    Representante: "Joaquin Cordova 10A ",
+    Descripcion del: "Aquí en Joakoburguer vendemos las mejores Hamburguesas de Jim Irwin." 
+    }
+"176293172598": {
+    Nombre del producto: "Fleur FraganceTipo:Para mujeres”,
+    Precio: "$8 a $15”,
+    Representante: "Naomi González 10A",
+    Descripcion del: "Producto creado para el proyecto STEAM."  
+    } 
+"7862931713216": { 
+    Nombre del producto: "ON", 
+    Tipo: "zapatos de futbol”,   
+    Precio: "$75,99", 
+    Representante: "ANTONY LUZURIAGA 10A", 
+    Descripcion: "Producto creado para el proyecto STEAM."
+    }
+"78629317342": {
+    Nombre del producto: "Cuarick", 
+    Tipo: "Cuadernos”,
+    Precio: "$1,00",
+    Representante: "Erick Molina 10A",
+    Descripcion: "Producto creado para el proyecto steam"
+    }
+"7832508762677": {
+    Nombre del producto: "Velasta",
+    Tipo: "Marca de ropa”,
+    Precio: "$20 - $35",
+    Representante: "Danna Palacios 10A",
+    Descripcion: "Producto creado para el proyecto steam."
+    }
+"7832508762677": {
+    Nombre del producto: "CLO AUTOS",
+    Tipo: "Venta de autos (vehículos nuevos y usados)",
+    Precio: "$12,500",
+    Representante: "Bryan Quiroz 10mo A",
+    Descripcion: "CLO AUTOS te ofrece vehículos de alta calidad, con revisión mecánica, documentación en regla y la mejor atención. Encuentra el auto perfecto para ti, con garantía, seguridad y las mejores condiciones del mercado. ¡Tu próximo auto te está esperando!"
+    }
+"7502302311212": {
+    Nombre del producto: "Cycling Store",
+    Tipo: "Producto ciclistico ficticio",
+    Precio: "$30000",
+    Representante: "Adrian Vásquez 10A",
+    Descripcion del: "Producto creado para el proyecto STEAM."  
+    }
 };
 
 function calcularEAN13(codigo){
